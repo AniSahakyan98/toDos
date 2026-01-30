@@ -7,7 +7,7 @@ const createList = (async(req,res) => {
     if(parentToDos){
         const {toDos, notes, date} = req.body
         let parent = await List.findOne({toDos : parentToDos})
-        parentId = parent._id
+        const parentId = parent._id
         const newToDowithParent = {parentId, toDos, notes, date, parentToDos}
         try {
             await services.createList(newToDowithParent);
@@ -25,7 +25,6 @@ const createList = (async(req,res) => {
             res.status(500).json({error: error.message})
         }
     }
-    
     
 })
 
