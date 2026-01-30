@@ -1,10 +1,31 @@
 const services = require('../services/list')
+const List = require('../models/schema')
 
-const createList = ((req,res) => {
-    const newToDo = {...req.body}
-    services.createList(newToDo)
-                        .then(() => res.status(201).json({message:"product created successfully"}))
-                        .catch((error) => res.status(500).json({error: error.message}))
+const createList = (async(req,res) => {
+    const parentToDos = req.body.parentToDos
+
+    if(parentToDos){
+        const {toDos, notes, date} = req.body
+        let parent = await List.findOne({toDos : parentToDos})
+        parentId = parent._id
+        const newToDowithParent = {parentId, toDos, notes, date, parentToDos}
+        try {
+            await services.createList(newToDowithParent);
+            res.status(201).json({message:"product created successfully"})
+        } catch(error) {
+            res.status(500).json({error: error.message})
+        }
+    } else if (!parentToDos) {
+         const {toDos, notes, date} = req.body
+         const newToDo = {toDos, notes, date}
+        try {
+            await services.createList(newToDo);
+            res.status(201).json({message:"product created successfully"})
+        } catch(error) {
+            res.status(500).json({error: error.message})
+        }
+    }
+    
     
 })
 
