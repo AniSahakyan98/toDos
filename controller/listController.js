@@ -3,19 +3,33 @@ const List = require('../models/schema')
 
 const createList = (async(req,res) => {
     const parentToDos = req.body.parentToDos
-    const parent = await List.findOne({toDos : parentToDos})
+    const childToDos = req.body.childToDos
 
-    if(parent){
+    const parent = await List.findOne({toDos : parentToDos})
+    const child = await List.findOne({toDos: childToDos})
+
+    if(parent || child){
         const {toDos, notes, date} = req.body
+        let newToDowithParent = {};
+
+        if(parent && child) {
         const parentId = parent._id
-        const newToDowithParent = {parentId, toDos, notes, date, parentToDos}
+        const childId = child._id
+          newToDowithParent = {parentId, childId, toDos, notes, date, parentToDos,childToDos}
+        } else if (parent && !child) {
+            parentId = parent._id
+            newToDowithParent = {parentId, toDos, notes, date, parentToDos}
+        } else if (!parent && child) {
+            childId = child._id
+            newToDowithParent = {childId, toDos, notes, date, childToDos}
+        }
         try {
             await services.createList(newToDowithParent);
             res.status(201).json({message:"product created successfully"})
         } catch(error) {
             res.status(500).json({error: error.message})
         }
-    } else if (!parent) {
+    } else if (!parent && !child) {
          const {toDos, notes, date} = req.body
          const newToDo = {toDos, notes, date}
         try {
@@ -24,7 +38,7 @@ const createList = (async(req,res) => {
         } catch(error) {
             res.status(500).json({error: error.message})
         }
-    }
+    } 
     
 })
 

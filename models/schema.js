@@ -7,6 +7,11 @@ const todoList = new Schema({
         required: false,
         ref: 'List'
     },
+    childId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: 'List'
+    },
     toDos: {
         type: String,
         required : true
@@ -20,6 +25,10 @@ const todoList = new Schema({
         required: false
     },
     parentToDos: {
+        type: String,
+        required: false
+    },
+    childToDos: {
         type: String,
         required: false
     }
