@@ -18,6 +18,10 @@ const todoList = new Schema({
     notes: {
         type: String,
         required: false
+    },
+    parentToDos: {
+        type: String,
+        required: false
     }
 
 }, {timestamps: true})

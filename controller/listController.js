@@ -3,10 +3,10 @@ const List = require('../models/schema')
 
 const createList = (async(req,res) => {
     const parentToDos = req.body.parentToDos
+    const parent = await List.findOne({toDos : parentToDos})
 
-    if(parentToDos){
+    if(parent){
         const {toDos, notes, date} = req.body
-        let parent = await List.findOne({toDos : parentToDos})
         const parentId = parent._id
         const newToDowithParent = {parentId, toDos, notes, date, parentToDos}
         try {
@@ -15,7 +15,7 @@ const createList = (async(req,res) => {
         } catch(error) {
             res.status(500).json({error: error.message})
         }
-    } else if (!parentToDos) {
+    } else if (!parent) {
          const {toDos, notes, date} = req.body
          const newToDo = {toDos, notes, date}
         try {
