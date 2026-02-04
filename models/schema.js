@@ -4,14 +4,12 @@ const Schema = mongoose.Schema
 const todoList = new Schema({
     parentId: {
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        ref: 'List'
+        required: false
     },
-    childId: {
+    children: [{
         type: mongoose.Schema.Types.ObjectId,
-        required: false,
-        ref: 'List'
-    },
+        required: false
+    }],
     toDos: {
         type: String,
         required : true
@@ -21,14 +19,6 @@ const todoList = new Schema({
         required : false
     },
     notes: {
-        type: String,
-        required: false
-    },
-    parentToDos: {
-        type: String,
-        required: false
-    },
-    childToDos: {
         type: String,
         required: false
     }

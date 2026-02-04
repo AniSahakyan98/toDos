@@ -2,44 +2,33 @@ const services = require('../services/list')
 const List = require('../models/schema')
 
 const createList = (async(req,res) => {
-    const parentToDos = req.body.parentToDos
-    const childToDos = req.body.childToDos
 
-    const parent = await List.findOne({toDos : parentToDos})
-    const child = await List.findOne({toDos: childToDos})
+    try {
+     const {toDos, notes, date, parentToDo} = req.body
+        let parentId = null;
 
-    if(parent || child){
-        const {toDos, notes, date} = req.body
-        let newToDowithParent = {};
-
-        if(parent && child) {
-        const parentId = parent._id
-        const childId = child._id
-          newToDowithParent = {parentId, childId, toDos, notes, date, parentToDos,childToDos}
-        } else if (parent && !child) {
+    if(parentToDo) {
+        const parent = await List.findOne({toDos: parentToDo}) 
+        if(!parent) {
+            return res.status(404).json({message: "parent not found"})
+        } else {
             parentId = parent._id
-            newToDowithParent = {parentId, toDos, notes, date, parentToDos}
-        } else if (!parent && child) {
-            childId = child._id
-            newToDowithParent = {childId, toDos, notes, date, childToDos}
         }
-        try {
-            await services.createList(newToDowithParent);
-            res.status(201).json({message:"product created successfully"})
-        } catch(error) {
-            res.status(500).json({error: error.message})
-        }
-    } else if (!parent && !child) {
-         const {toDos, notes, date} = req.body
-         const newToDo = {toDos, notes, date}
-        try {
-            await services.createList(newToDo);
-            res.status(201).json({message:"product created successfully"})
-        } catch(error) {
-            res.status(500).json({error: error.message})
-        }
-    } 
+    }
+        const newList = await services.createList({toDos, notes, parentId})
+
+        if(parentId) {  
+           await List.findByIdAndUpdate(parentId, {$push: {children: newList._id}})
+        } 
+        
+        return res.status(201).json({
+            message: "to do created successfully",
+            toDo: newList
+        })
     
+  } catch(error) {
+    return res.status(500).json({error: error.message})
+  }
 })
 
 const getList = ((req,res) => {
