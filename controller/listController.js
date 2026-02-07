@@ -4,22 +4,7 @@ const List = require('../models/schema')
 const createList = (async(req,res) => {
 
     try {
-     const {toDos, notes, date, parentToDo} = req.body
-        let parentId = null;
-
-    if(parentToDo) {
-        const parent = await List.findOne({toDos: parentToDo}) 
-        if(!parent) {
-            return res.status(404).json({message: "parent not found"})
-        } else {
-            parentId = parent._id
-        }
-    }
-        const newList = await services.createList({toDos, notes, parentId})
-
-        if(parentId) {  
-           await List.findByIdAndUpdate(parentId, {$push: {children: newList._id}})
-        } 
+        const newList = await services.createList(req.body)
         
         return res.status(201).json({
             message: "to do created successfully",
@@ -27,6 +12,9 @@ const createList = (async(req,res) => {
         })
     
   } catch(error) {
+    if(error.message === "Parent_not_found") {
+        return res.status(404).json({message: "Parent Not found"})
+    }
     return res.status(500).json({error: error.message})
   }
 })

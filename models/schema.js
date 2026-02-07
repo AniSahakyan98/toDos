@@ -12,15 +12,7 @@ const todoList = new Schema({
     }],
     toDos: {
         type: String,
-        required : true
-    },
-    date : {
-        type: Date,
-        required : false
-    },
-    notes: {
-        type: String,
-        required: false
+        required: true
     }
 
 }, {timestamps: true})

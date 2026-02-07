@@ -2,9 +2,26 @@ const List = require('../models/schema')
 
 //createList,getList,updateList,deleteList
 
-const createList = (data) => {
-    const toDo = new List(data)
-    return toDo.save()
+const createList = async({toDos,parentToDo}) => {
+    let parentId = null;
+
+    if(parentToDo){
+        let parent = await List.findOne({toDos: parentToDo})
+        if(!parent) {
+           throw new Error("Parent_not_found")
+        } else {
+            parentId = parent._id
+        } 
+    }
+
+    let newList = await List.create({toDos,parentId})
+
+    if(parentId) {
+        await List.findByIdAndUpdate(parentId,{$push: {children: newList._id}})
+    }
+
+    return newList
+    
 }
 
 const getList = () => {
