@@ -19,6 +19,16 @@ const createList = (async(req,res) => {
   }
 })
 
+const createParentAndChildJson = (async(req,res) => {
+    try {
+        const data = await services.getParentAndChild()
+        return res.status(200).json({data})
+    } catch (error) {
+        return res.status(500).json({error: error.message})
+    }
+    
+})
+
 const getList = ((req,res) => {
     services.getList()
                     .then((data) => res.status(200).json({data}))
@@ -44,5 +54,6 @@ module.exports = {
     createList,
     getList,
     deleteList,
-    updateList
+    updateList,
+    createParentAndChildJson
 }
