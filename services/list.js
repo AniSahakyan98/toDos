@@ -27,44 +27,42 @@ const createList = async({toDos,parentToDo}) => {
 }
 
 const getParentAndChild = async() => {
-    const parentWithChild = await List.find(
-        {children: {$ne: []}}
-    )
+    const all = await List.find()
+    
+   const result = await Promise.all(all.map(async(docs) => {
 
-   const result = await Promise.all(parentWithChild.map(async(docs) => {
-       const children = await Promise.all(docs.children.map(async(childId) => {
+    if(docs.children.length !== 0) {
+       const childrenAll = await Promise.all(docs.children.map(async(childId) => {
         
-            const child = await List.findById(childId).select("toDos -_id");
-            return child.toDos
+            const child = await List.findById(childId)
+            return child.toDos 
 
         }))
+              
         
-        return {
-            [docs.toDos] : children
-        }   
-         
+        return await Promise.all(childrenAll.map(async(child) => {
+            const childOfChild = await List.findOne({toDos: child})
+                const childrenId = childOfChild.children
+                    if(childrenId.length !== 0) {
+                       return await Promise.all(childrenId.map(async(childId) => {
+                        const childOfChildNaming = await List.findOne({_id: childId})
+                       //is there a need for the if below ?
+                        if(childOfChildNaming) {
+                            const childOfChildName = childOfChildNaming.toDos 
+                            return `${docs.toDos} - ${child} - ${childOfChildName} `
+                        }
+                        }))
+                    }
+                    return `${docs.toDos} - ${child} `
+        }))
+    }  
+        return `${docs.toDos}`
+    
+    
+
     }))
 
    return result
-// return List.findById("6988667183201a9f513c7736")
-//   .select("toDos -_id");
-
-
-       
-    //    .map(async(doc) => {
-       
-    //     const updatedChildren = await doc.children.map((childId) => {
-    //         childId = List.findByIdAndUpdate(childId)
-    //     })
-
-
-
-
-
-    //     return {
-    //         [docs.toDos] : updatedChildren
-    //     }
-    //    })
     
 };
 

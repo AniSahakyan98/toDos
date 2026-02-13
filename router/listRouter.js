@@ -7,7 +7,7 @@ Router.post('/create',controller.createList)
 Router.get('/get',controller.getList)
 Router.delete('/delete/:id',controller.deleteList)
 Router.put('/update/:id',controller.updateList)
-Router.get('/getParentAndChild',controller.createParentAndChildJson)
+Router.get('/getParentAndChild',controller.getParentAndChild)
 
 
 

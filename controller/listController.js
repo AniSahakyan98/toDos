@@ -19,7 +19,7 @@ const createList = (async(req,res) => {
   }
 })
 
-const createParentAndChildJson = (async(req,res) => {
+const getParentAndChild = (async(req,res) => {
     try {
         const data = await services.getParentAndChild()
         return res.status(200).json({data})
@@ -55,5 +55,5 @@ module.exports = {
     getList,
     deleteList,
     updateList,
-    createParentAndChildJson
+    getParentAndChild
 }
