@@ -1,3 +1,4 @@
+const { allLocales } = require('@faker-js/faker');
 const List = require('../models/schema')
 
 
@@ -26,45 +27,48 @@ const createList = async({toDos,parentToDo}) => {
     
 }
 
+//parent- children- childrenofChild
 const getParentAndChild = async() => {
+        //plan holidays - ticket 
+        //plan holidays - accomodation
+        //accomodation - book
+        //accomodation - Cancel the rest of the
+        //plan budget
+        //book
+        //Cancel the rest of the
+        //ticket
+
     const all = await List.find()
+    let map = new Map()
+
+    for(const docs of all) {
     
-   const result = await Promise.all(all.map(async(docs) => {
-
-    if(docs.children.length !== 0) {
-       const childrenAll = await Promise.all(docs.children.map(async(childId) => {
-        
-            const child = await List.findById(childId)
-            return child.toDos 
-
-        }))
-              
-        
-        return await Promise.all(childrenAll.map(async(child) => {
-            const childOfChild = await List.findOne({toDos: child})
-                const childrenId = childOfChild.children
-                    if(childrenId.length !== 0) {
-                       return await Promise.all(childrenId.map(async(childId) => {
-                        const childOfChildNaming = await List.findOne({_id: childId})
-                       //is there a need for the if below ?
-                        if(childOfChildNaming) {
-                            const childOfChildName = childOfChildNaming.toDos 
-                            return `${docs.toDos} - ${child} - ${childOfChildName} `
-                        }
-                        }))
-                    }
-                    return `${docs.toDos} - ${child} `
-        }))
-    }  
-        return `${docs.toDos}`
+        if(docs.children.length !== 0) { 
+            for(const childId of docs.children) {
+                const child = await List.findById(childId)
+                    if(child) {
+                        map.set(`${docs.toDos} - ${child.toDos}`)  
+                            if(child.children.length !== 0){
+                                map.delete(`${docs.toDos} - ${child.toDos}`)
+                                for(const childOfChildId of child.children) {
+                                        const childOfChild = await List.findById(childOfChildId)
+                                        
+                                        if(childOfChild){
+                                            map.set(`${docs.toDos} - ${child.toDos} - ${childOfChild.toDos}`)
+                                        }
+                                } 
+                            }              
+                     }       
+            }  
+        } else {
+           map.set(docs.toDos,docs.toDos)
+        }
+    }     
     
     
+   return [...map.keys()]
 
-    }))
-
-   return result
-    
-};
+}
 
 
 
