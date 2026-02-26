@@ -29,44 +29,50 @@ const createList = async({toDos,parentToDo}) => {
 
 //parent- children- childrenofChild
 const getParentAndChild = async() => {
-        //plan holidays - ticket 
-        //plan holidays - accomodation
-        //accomodation - book
-        //accomodation - Cancel the rest of the
-        //plan budget
-        //book
-        //Cancel the rest of the
-        //ticket
-
     const all = await List.find()
     let map = new Map()
 
     for(const docs of all) {
-    
-        if(docs.children.length !== 0) { 
-            for(const childId of docs.children) {
-                const child = await List.findById(childId)
-                    if(child) {
-                        map.set(`${docs.toDos} - ${child.toDos}`)  
-                            if(child.children.length !== 0){
-                                map.delete(`${docs.toDos} - ${child.toDos}`)
-                                for(const childOfChildId of child.children) {
-                                        const childOfChild = await List.findById(childOfChildId)
-                                        
-                                        if(childOfChild){
-                                            map.set(`${docs.toDos} - ${child.toDos} - ${childOfChild.toDos}`)
-                                        }
-                                } 
-                            }              
-                     }       
-            }  
-        } else {
-           map.set(docs.toDos,docs.toDos)
+        if(docs.parentId !== null) { 
+            const parentName = await List.findOne({_id: docs.parentId})
+            map.set(`${docs._id}`,{ parent: parentName.toDos, child : docs.toDos, childId :docs._id})
         }
-    }     
+    }
+
+    let arr = [];
+
+    for(const childOfChild of all) {
+            if(childOfChild.parentId !== null) {     
+
+            let result = map.get(`${childOfChild.parentId}`)
+            let copy = {...result}
+                if(result) {
+                     arr.push(childOfChild.parentId)
+                     copy.childOfChild = childOfChild.toDos   
+                     map.set(copy,copy)
+                }
+  
+            }
+            if(childOfChild.children.length === 0) {
+                map.set(childOfChild.toDos,{childOfChild: childOfChild.toDos})
+            }        
+    }
+
+
+    for(const key of arr){
+        map.delete(`${key}`)
+    }
     
-    
-   return [...map.keys()]
+    return [...map.values().map((val) => {
+        if(val.parent !== undefined && val.child !== undefined && val.childOfChild !== undefined) {
+            return val = `${val.parent} - ${val.child} - ${val.childOfChild}`
+        } else if (val.parent !== undefined && val.child !== undefined && val.childOfChild === undefined) {
+            return val = `${val.parent} - ${val.child}`
+        } else if (val.parent === undefined && val.child === undefined && val.childOfChild !== undefined){
+            return val = `${val.childOfChild}`
+        }
+    } )]
+
 
 }
 
