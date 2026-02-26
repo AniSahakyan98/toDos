@@ -62,6 +62,7 @@ const getParentAndChild = async() => {
     for(const key of arr){
         map.delete(`${key}`)
     }
+
     
     return [...map.values().map((val) => {
         if(val.parent !== undefined && val.child !== undefined && val.childOfChild !== undefined) {
