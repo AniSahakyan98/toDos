@@ -3,10 +3,6 @@ const Schema = mongoose.Schema
 
 
 const user = new Schema({
-    id: {
-        type: String,
-        required: true
-    },
     name: {
         type: String,
         required: true
@@ -16,18 +12,15 @@ const user = new Schema({
         required: true
     },
     gender: {
-        type: Boolean,
+        type: String,
         required: true
     },
-    phone: {
-        type: Number,
-        required: false
-    },
-    email: {
-        type: String,
-        required: false
+    details: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: false,
+        ref: "UserDetails"
     }
-})
+},{ timestamps: true })
 
 const User = mongoose.model('User',user)
 module.exports = User

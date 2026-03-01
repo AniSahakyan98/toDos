@@ -3,14 +3,14 @@ const Schema = mongoose.Schema
 
 const userDetails = new Schema({
     phone:{
-        type: Number,
+        type: String,
         required: false
     },
     email:{
         type: String,
         required: false
     }
-})
+},{ timestamps: true })
 
-const UserDetails = mongoose.connect('UserDetail',userDetails)
+const UserDetails = mongoose.model('UserDetail',userDetails)
 module.exports = UserDetails

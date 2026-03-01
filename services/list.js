@@ -1,7 +1,5 @@
-const { allLocales } = require('@faker-js/faker');
+//const { allLocales } = require('@faker-js/faker');
 const List = require('../models/schema')
-
-
 
 //createList,getList,updateList,deleteList
 
@@ -74,9 +72,7 @@ const getParentAndChild = async() => {
         }
     } )]
 
-
 }
-
 
 
 const getList = () => {
@@ -96,6 +92,5 @@ module.exports = {
     getList,
     deleteList,
     updateList,
-   getParentAndChild
-    
+    getParentAndChild
 }

@@ -1,5 +1,4 @@
 const services = require('../services/list')
-const List = require('../models/schema')
 
 const createList = (async(req,res) => {
 
