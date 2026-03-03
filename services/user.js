@@ -2,7 +2,7 @@ const User = require('../models/userSchema');
 const UserDetails = require('../models/userDetails');
 const { findById, findByIdAndUpdate } = require('../models/schema');
 
-//createUser, deleteUser, updateUser, findUser
+//createUser, deleteUser, updateUser, findUserbyId, getUserList
 
 const createUser = async({name,age,gender,phone,email}) => {
     let details = await UserDetails.create({phone,email})
@@ -33,14 +33,33 @@ const updateUser = async(id,data) => {
     return user
 }
 
-//getUser - , ham by id hamel listov aysinqn paginationov, 1 page u 5 hoqi, 2 page u 6-10 mard@, 3 11-15 u tenc sharunak),
+const getUserById = async(id) => {
+    const user = await User.findById(id)
+    const userInfo = {name: user.name,age: user.age,gender: user.gender}
+    const details = await UserDetails.findById(user.details)
+    const result = {phone: details.phone, email:details.email}
+    return {...userInfo,...result}
+}
+
+
+// hamel listov aysinqn paginationov, 1 page u 5 hoqi, 2 page u 6-10 mard@, 3 11-15 u tenc sharunak),
 //Basic jsov karas anes paginationner@, heto kanenq db level
-//Sovorakan get by id jamanak petqa stanal nayev additional info table
 //Bayc erp listenq stanum voch
+
+const getUserList = async() => {
+
+}
+
+
+
+
+
 
 
 module.exports = {
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    getUserById,
+    getUserList
 }

@@ -26,16 +26,29 @@ const deleteUser = (async(req,res) => {
 const updateUser = (async(req,res)=> {
         const id = req.params.id
         const data = {...req.body}
-        console.log(data)
         services.updateUser(id,data)
                                 .then((data) => res.status(200).json({message: "User updated successfully", updatedUser: data}))
                                 .catch((error) => res.status(500).json({error: error.message}))
     
 })
 
+const getUserById = (async(req,res) => {
+    try {
+        const user = await services.getUserById(req.params.id)
+        return res.status(201).json(user)
+    } catch(error) {
+       return res.status(500).json({error: error.message})
+    }
+})
+
+const getUserList = (async(req,res) => {
+
+})
 
 module.exports = {
     createUser,
     deleteUser,
-    updateUser
+    updateUser,
+    getUserById,
+    getUserList
 }
