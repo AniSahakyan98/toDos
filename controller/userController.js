@@ -42,7 +42,12 @@ const getUserById = (async(req,res) => {
 })
 
 const getUserList = (async(req,res) => {
-
+    try {
+        let userList = await services.getUserList(req.params.id)
+        return res.status(201).json(userList)
+    } catch(error) {
+       return res.status(500).json({error: error.message})
+    }
 })
 
 module.exports = {

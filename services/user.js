@@ -42,20 +42,25 @@ const getUserById = async(id) => {
 }
 
 
-// hamel listov aysinqn paginationov, 1 page u 5 hoqi, 2 page u 6-10 mard@, 3 11-15 u tenc sharunak),
-//Basic jsov karas anes paginationner@, heto kanenq db level
-//Bayc erp listenq stanum voch
 
-const getUserList = async() => {
-
+//pls check is this correct, it's working like this, when I pass "0-4" , "5-9" ,etc, or it should be 1-5, 5-10
+const getUserList = async(pageLimit) => {
+   const users = await User.find()
+   const newArr = []
+   let startpoint = pageLimit.slice(0,pageLimit.indexOf("-"))
+   let endpoint = pageLimit.split("-")[1]
+   
+   for(let i = startpoint; i < users.length; i++) {
+        newArr.push(users[i])
+        
+        if(i === +endpoint) {
+            return {newArr}
+        }   
+   }
+   return {newArr}
 }
 
-
-
-
-
-
-
+ 
 module.exports = {
     createUser,
     deleteUser,
