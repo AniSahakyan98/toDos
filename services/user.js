@@ -1,3 +1,4 @@
+const mongoose = require('mongoose')
 const User = require('../models/userSchema');
 const UserDetails = require('../models/userDetails');
 const { findById, findByIdAndUpdate } = require('../models/schema');
@@ -34,11 +35,37 @@ const updateUser = async(id,data) => {
 }
 
 const getUserById = async(id) => {
-    const user = await User.findById(id)
-    const userInfo = {name: user.name,age: user.age,gender: user.gender}
-    const details = await UserDetails.findById(user.details)
-    const result = {phone: details.phone, email:details.email}
-    return {...userInfo,...result}
+
+    const user = await User.aggregate([
+        {$match : {
+            _id : new mongoose.Types.ObjectId(id)
+        }},
+        
+        {$lookup: {
+            from: "userdetails",
+            localField: "details",
+            foreignField: "_id",
+            as : "userDetails"
+        
+        }}, 
+        {
+            $unwind: "$userDetails"
+        },
+        {$project: {
+            name: 1,
+            age: 1,
+            gender: 1,
+            phone: "$userDetails.phone",
+            email: "$userDetails.email"
+        }}
+    ])
+
+    return user
+    // const user = await User.findById(id)
+    // const userInfo = {name: user.name,age: user.age,gender: user.gender}
+    // const details = await UserDetails.findById(user.details)
+    // const result = {phone: details.phone, email:details.email}
+    // return {...userInfo,...result}
 }
 
 
