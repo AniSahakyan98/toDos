@@ -50,10 +50,21 @@ const getUserList = (async(req,res) => {
     }
 })
 
+const getUsersCount = (async(req,res) => {
+    try {
+      const count = await services.getUsersCount()
+      return res.status(201).json({
+        message: `User count is equal to ${count.totalUsers}`,
+        count: count
+      })
+    } catch(error) { return res.status(500).json({error: error.message})}
+})
+
 module.exports = {
     createUser,
     deleteUser,
     updateUser,
     getUserById,
-    getUserList
+    getUserList,
+    getUsersCount
 }

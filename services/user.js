@@ -34,6 +34,14 @@ const updateUser = async(id,data) => {
     return user
 }
 
+const getUsersCount  = async() => {
+    const count = await User.aggregate([
+        {$count: "totalUsers"}
+    ])
+
+    return count[0]
+}
+
 const getUserById = async(id) => {
 
     const user = await User.aggregate([
@@ -97,11 +105,14 @@ const getUserList = async(pages) => {
 //    return {newArr}
 }
 
+
+
  
 module.exports = {
     createUser,
     deleteUser,
     updateUser,
     getUserById,
-    getUserList
+    getUserList,
+    getUsersCount
 }
