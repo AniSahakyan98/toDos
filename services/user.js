@@ -40,7 +40,7 @@ const getUserById = async(id) => {
         {$match : {
             _id : new mongoose.Types.ObjectId(id)
         }},
-        
+
         {$lookup: {
             from: "userdetails",
             localField: "details",
@@ -70,21 +70,31 @@ const getUserById = async(id) => {
 
 
 
-//pls check is this correct, it's working like this, when I pass "0-4" , "5-9" ,etc, or it should be 1-5, 5-10
-const getUserList = async(pageLimit) => {
-   const users = await User.find()
-   const newArr = []
-   let startpoint = pageLimit.slice(0,pageLimit.indexOf("-"))
-   let endpoint = pageLimit.split("-")[1]
+//limit, offset
+const getUserList = async(pages) => {
+    let endpoint = pages.split("-")[1]
+
+    const users = await User.aggregate([
+        {$sort: {createdAt: -1}},
+        {$skip: +endpoint},
+        {$limit:5}
+    ])
+
+    return users
+
+//    const users = await User.find()
+//    const newArr = []
+//    let startpoint = pageLimit.slice(0,pageLimit.indexOf("-"))
+//    let endpoint = pageLimit.split("-")[1]
    
-   for(let i = startpoint; i < users.length; i++) {
-        newArr.push(users[i])
+//    for(let i = startpoint; i < users.length; i++) {
+//         newArr.push(users[i])
         
-        if(i === +endpoint) {
-            return {newArr}
-        }   
-   }
-   return {newArr}
+//         if(i === +endpoint) {
+//             return {newArr}
+//         }   
+//    }
+//    return {newArr}
 }
 
  
