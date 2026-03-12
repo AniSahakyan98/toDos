@@ -8,7 +8,14 @@ const createPost = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
+const getPost = (async(req,res) => {
+     try {
+        const posts = await services.getPost()
+        return res.status(201).json(posts)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
 
 module.exports = {
-    createPost
+    createPost,
+    getPost
 }
