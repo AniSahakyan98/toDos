@@ -9,6 +9,10 @@ const post = new Schema({
     body: {
         type: String,
         required: false
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        required: true
     }
 },{timestamps: true})
 

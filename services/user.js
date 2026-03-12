@@ -207,6 +207,8 @@ const getWeeklyUsers = (async() => {
 //Example idea:
 //One user can have multiple posts.
 
+
+
 module.exports = {
     createUser,
     deleteUser,

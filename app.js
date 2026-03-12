@@ -5,6 +5,7 @@ const express = require('express')
 const app = express()
 const Router = require('./router/listRouter')
 const userRouter = require('./router/userRouter')
+const postRouter = require('./router/postRouter')
 
 
 const DbURI = process.env.DB_URI
@@ -19,6 +20,7 @@ mongoose.connect(DbURI)
 app.use(express.json())      
 app.use(userRouter)
 app.use("/toDo",Router)
+app.use("/posts",postRouter)
 
 
 
