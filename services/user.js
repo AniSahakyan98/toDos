@@ -106,13 +106,119 @@ const getUserList = async(pages) => {
 }
 
 
+//Using MongoDB Aggregation, do the following:
+//Group users by gender
+//For each gender calculate:
+//total number of users
+//average age
 
- 
+const getUsersByGender = async () => {
+    const users = await User.aggregate([
+        {$group: {_id: "$gender",totalUsers: {$sum: 1},averageAge: {$avg: "$age"}, names : {$push: "$name"} }},
+    ])
+
+    return users
+}
+
+//Exercise 1 --- Add the ability to search users by name.
+const searchByName = async (name) => {
+    const filteredName = await User.aggregate([
+        {$match : {name: name}}
+    ])
+
+    return filteredName
+}
+
+//Exercise 2
+// Allow users to filter the user list by age range.
+// Example idea: users between X and Y.
+
+const  filterbyAge = async (range) => {
+    const startpoint = range.slice(0,range.indexOf("-"))
+    const endpoint = range.split("-")[1]
+    //console.log(startpoint)
+    //console.log(endpoint)
+
+    const result = await User.aggregate([
+        {$match : {age : {$gte: +startpoint, $lte : +endpoint}}}
+    ])
+
+    return result
+
+}
+
+//Exercise 3
+//Add sorting to the user list (ascending and descending).
+
+const sortedList = async() => {
+    const list = await User.aggregate([
+        {$sort: {age : 1}}
+    ])
+    return list
+}
+
+//Exercise 5
+//Create an endpoint that returns the average age of all users.
+
+const avgAge = (async() => {
+    const avgAge = await User.aggregate([
+        {$group : {
+            _id: null,
+            averageAge: {$avg: "$age"}
+        }},
+        {$project : {averageAge:1,_id:0}}
+    ])
+    return avgAge
+})
+
+//Exercise 6
+//Return the youngest and oldest user in the system.
+
+const getYoungestAndOldest = (async() => {
+    const youngestAndOldest = await User.aggregate([
+        {$group: {
+        _id: null,
+         youngest: {$min : "$age"},
+         oldest: {$max: "$age"}
+        }},
+        {$project : {youngest:1,oldest:1,_id:0}}
+    ])
+    return youngestAndOldest
+})
+
+//Exercise 8
+//Create an endpoint that returns how many users were created in the last 7 days.
+
+const getWeeklyUsers = (async() => {
+    const sevenDaysAgo = new Date()
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7)
+   
+    const weeklyUsers = await User.aggregate([
+        {$match: {
+            createdAt: {$gt: sevenDaysAgo}
+        }}
+    ])
+
+    return weeklyUsers
+})
+
+//Exercise 9
+//Create a new entity Posts and connect it to users.
+//Example idea:
+//One user can have multiple posts.
+
 module.exports = {
     createUser,
     deleteUser,
     updateUser,
     getUserById,
     getUserList,
-    getUsersCount
+    getUsersCount,
+    getUsersByGender,
+    searchByName,
+    filterbyAge,
+    sortedList, 
+    avgAge,
+    getYoungestAndOldest,
+    getWeeklyUsers
 }

@@ -60,11 +60,75 @@ const getUsersCount = (async(req,res) => {
     } catch(error) { return res.status(500).json({error: error.message})}
 })
 
+const getUsersByGender = (async(req,res) => {
+    try {
+        const user = await services.getUsersByGender()
+        return res.status(201).json({
+            users: user
+        })
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const searchByName = (async(req,res) => {
+    try {
+        const filteredResult = await services.searchByName(req.params.id)
+        return res.status(201).json({filteredResult})
+    } catch(error) {
+        return res.status(500).json({error:error.message})
+    }
+
+})
+
+const filterbyAge = (async(req,res) => {
+    try {
+        const result = await services.filterbyAge(req.params.id)
+        return res.status(201).json({result})
+    }catch(error) {
+        return res.status(500).json({error: error.message})
+    }
+})
+
+const sortedList = (async(req,res) => {
+    try {
+        let list = await services.sortedList()
+        return res.status(201).json({list})
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const avgAge = (async(req,res) => {
+    try {
+        let age = await services.avgAge()
+        return res.status(201).json(age)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const getYoungestAndOldest = (async(req,res) => {
+    try {
+        let user = await services.getYoungestAndOldest()
+        return res.status(201).json(user)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const getWeeklyUsers = (async(req,res) => {
+    try {
+        let users = await services.getWeeklyUsers()
+        return res.status(201).json(users)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+
 module.exports = {
     createUser,
     deleteUser,
     updateUser,
     getUserById,
     getUserList,
-    getUsersCount
+    getUsersCount,
+    getUsersByGender,
+    searchByName,
+    filterbyAge,
+    sortedList,
+    avgAge,
+    getYoungestAndOldest,
+    getWeeklyUsers
 }

@@ -19,7 +19,11 @@ const user = new Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: false,
         ref: "UserDetails"
-    }
+    },
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        required: false
+    }]
 },{ timestamps: true })
 
 const User = mongoose.model('User',user)
