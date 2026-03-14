@@ -229,6 +229,39 @@ const usersNoPost = (async() => {
 //Exercise 13
 // Add a soft delete system where deleted users are not actually removed.-eht kganq sran
 
+// Exercise 14 - Create an endpoint that returns the top 3 oldest users.
+
+const oldestUsers = (async () => {
+    const users = await User.aggregate([   
+        {$sort: {age: -1}},
+        {$limit: 3}
+    ])
+
+    return users
+})
+
+//Exercise 15 - Create an endpoint that returns duplicate names in the database.
+
+const duplications = (async () => {
+    const map = new Map()
+
+    const users = await User.find()
+    const userNames = users.map(user => user.name)
+
+    for(const name of userNames) {
+        (map.has(name) ? map.set(name,map.get(name) + 1) : map.set(name,1))
+    }
+
+    const resultArr = [];
+    for (const [key,value] of map) {
+        if (value > 1) {
+            resultArr.push(key)
+        }
+    }
+
+    return resultArr
+})
+
 module.exports = {
     createUser,
     deleteUser,
@@ -243,6 +276,8 @@ module.exports = {
     avgAge,
     getYoungestAndOldest,
     getWeeklyUsers,
-    usersNoPost
+    usersNoPost,
+    oldestUsers,
+    duplications
 }
 

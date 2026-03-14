@@ -5,6 +5,8 @@ const controller = require('../controller/userController')
 
 Router.post('/createUser', controller.createUser)
 Router.get('/missingPosts', controller.usersNoPost)
+Router.get('/oldestUsers',controller.oldestUsers)
+Router.get('/duplicatedNames',controller.duplications)
 Router.delete('/:id', controller.deleteUser)
 Router.put('/updateUser/:id', controller.updateUser)
 Router.get('/averageAge',controller.avgAge)

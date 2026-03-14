@@ -123,6 +123,20 @@ const usersNoPost = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
+const oldestUsers = (async(req,res) => {
+    try {
+        let result = await services.oldestUsers()
+        return res.status(201).json(result)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const duplications = (async(req,res) => {
+    try {
+        let result = await services.duplications()
+        return res.status(201).json(result)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
 module.exports = {
     createUser,
     deleteUser,
@@ -137,5 +151,7 @@ module.exports = {
     avgAge,
     getYoungestAndOldest,
     getWeeklyUsers,
-    usersNoPost
+    usersNoPost,
+    oldestUsers,
+    duplications
 }
