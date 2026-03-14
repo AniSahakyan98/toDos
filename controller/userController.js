@@ -116,6 +116,12 @@ const getWeeklyUsers = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
+const usersNoPost = (async(req,res) => {
+    try {
+        let result = await services.usersNoPost()
+        return res.status(201).json(result)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
 
 module.exports = {
     createUser,
@@ -130,5 +136,6 @@ module.exports = {
     sortedList,
     avgAge,
     getYoungestAndOldest,
-    getWeeklyUsers
+    getWeeklyUsers,
+    usersNoPost
 }

@@ -1,7 +1,9 @@
 const mongoose = require('mongoose')
 const User = require('../models/userSchema');
 const UserDetails = require('../models/userDetails');
+const Post = require('../models/postSchema')
 const { findById, findByIdAndUpdate } = require('../models/schema');
+
 
 //createUser, deleteUser, updateUser, findUserbyId, getUserList
 
@@ -202,12 +204,30 @@ const getWeeklyUsers = (async() => {
     return weeklyUsers
 })
 
-//Exercise 9
-//Create a new entity Posts and connect it to users.
-//Example idea:
-//One user can have multiple posts.
+
+//Exercise 11
+//Create an endpoint that returns users who have no posts.
 
 
+const usersNoPost = (async() => {
+    let posts = await Post.find() // [{},{}]
+    let usersPosts = posts.map((post) => post.userId)
+    let usersWithNoPost = []
+
+
+    const Users = await User.find()
+    for(const user of Users) {
+        if(!usersPosts.some(id => id.equals(user._id))){
+            usersWithNoPost.push(user)
+        }
+    }
+    
+    return usersWithNoPost
+
+})
+
+//Exercise 13
+// Add a soft delete system where deleted users are not actually removed.-eht kganq sran
 
 module.exports = {
     createUser,
@@ -222,5 +242,7 @@ module.exports = {
     sortedList, 
     avgAge,
     getYoungestAndOldest,
-    getWeeklyUsers
+    getWeeklyUsers,
+    usersNoPost
 }
+

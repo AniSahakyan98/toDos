@@ -4,6 +4,7 @@ const controller = require('../controller/userController')
 
 
 Router.post('/createUser', controller.createUser)
+Router.get('/missingPosts', controller.usersNoPost)
 Router.delete('/:id', controller.deleteUser)
 Router.put('/updateUser/:id', controller.updateUser)
 Router.get('/averageAge',controller.avgAge)
