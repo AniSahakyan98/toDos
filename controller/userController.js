@@ -26,6 +26,7 @@ const deleteUser = (async(req,res) => {
 const updateUser = (async(req,res)=> {
         const id = req.params.id
         const data = {...req.body}
+        console.log(data)
         services.updateUser(id,data)
                                 .then((data) => res.status(200).json({message: "User updated successfully", updatedUser: data}))
                                 .catch((error) => res.status(500).json({error: error.message}))
@@ -137,6 +138,13 @@ const duplications = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
+const userStatus = (async(req,res) => {
+    try {
+        let result = await services.userStatus(req.params.id)
+        return res.status(200).json(result)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
 module.exports = {
     createUser,
     deleteUser,
@@ -153,5 +161,6 @@ module.exports = {
     getWeeklyUsers,
     usersNoPost,
     oldestUsers,
-    duplications
+    duplications,
+    userStatus
 }

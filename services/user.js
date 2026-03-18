@@ -22,16 +22,17 @@ const createUser = async({name,age,gender,phone,email}) => {
 
 const deleteUser = async(id) => {
     const user = await User.findByIdAndDelete(id)
-    const details = await UserDetails.findByIdAndDelete(user.details)
-    if(details) {
-        UserDetails.findByIdAndDelete(user.details)
+    if(user && user.details) {
+        await UserDetails.findByIdAndDelete(user.details)
     }
-    return 
+    return user
 }
 
 const updateUser = async(id,data) => {
-    const user = await User.findByIdAndUpdate(id,data,{new: true})
-    await UserDetails.findByIdAndUpdate(user.details,data,{new: true})
+    const user = await User.findByIdAndUpdate(id, {name: data.name,age: data.age,phone: data.phone},{new: true})
+    if (user.details) {
+        await UserDetails.findByIdAndUpdate(user.details,{email: data.email, phone: data.phone},{new: true})
+    }
     
     return user
 }
@@ -46,9 +47,11 @@ const getUsersCount  = async() => {
 
 const getUserById = async(id) => {
 
+    
     const user = await User.aggregate([
         {$match : {
-            _id : new mongoose.Types.ObjectId(id)
+            _id : new mongoose.Types.ObjectId(id),
+            active: true
         }},
 
         {$lookup: {
@@ -59,7 +62,10 @@ const getUserById = async(id) => {
         
         }}, 
         {
-            $unwind: "$userDetails"
+            $unwind: {
+            path: "$userDetails",
+            preserveNullAndEmptyArrays: true
+            }
         },
         {$project: {
             name: 1,
@@ -229,6 +235,12 @@ const usersNoPost = (async() => {
 //Exercise 13
 // Add a soft delete system where deleted users are not actually removed.-eht kganq sran
 
+const userStatus = (async(id) => {
+    const deletedUser = await User.findByIdAndUpdate(id,{active:false},{new:true})
+    return deletedUser
+})
+
+
 // Exercise 14 - Create an endpoint that returns the top 3 oldest users.
 
 const oldestUsers = (async () => {
@@ -278,6 +290,7 @@ module.exports = {
     getWeeklyUsers,
     usersNoPost,
     oldestUsers,
-    duplications
+    duplications,
+    userStatus
 }
 
