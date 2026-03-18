@@ -88,12 +88,13 @@ const getUserById = async(id) => {
 
 //limit, offset
 const getUserList = async(pages) => {
-    let endpoint = pages.split("-")[1]
+    let [start,end] = pages.split("-").map(Number)
 
     const users = await User.aggregate([
+        { $match: { active: true } },
         {$sort: {createdAt: -1}},
-        {$skip: +endpoint},
-        {$limit:5}
+        {$skip: start},
+        {$limit: end - start + 1}
     ])
 
     return users
