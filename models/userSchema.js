@@ -27,5 +27,9 @@ const user = new Schema({
     }
 },{ timestamps: true })
 
+
+user.index({name: 1, age: -1})
+user.index({name: "text", gender: "text"})
+
 const User = mongoose.model('User',user)
 module.exports = User

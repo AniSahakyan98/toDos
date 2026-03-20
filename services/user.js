@@ -275,6 +275,12 @@ const duplications = (async () => {
     return resultArr
 })
 
+const userSearch = (async(query) =>{
+    return await User.find({
+        $text: {$search: query}
+    })
+})
+
 module.exports = {
     createUser,
     deleteUser,
@@ -292,6 +298,7 @@ module.exports = {
     usersNoPost,
     oldestUsers,
     duplications,
-    userStatus
+    userStatus,
+    userSearch
 }
 

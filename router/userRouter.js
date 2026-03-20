@@ -17,9 +17,10 @@ Router.get('/sorting',controller.sortedList)
 Router.get('/gender',controller.getUsersByGender)
 Router.get('/youngestAndOldest',controller.getYoungestAndOldest)
 Router.get('/list/:id',controller.getUserList)
+Router.get('/search', controller.userSearch)
+
 Router.get('/:id',controller.getUserById)
 Router.get('/ageRange/:id',controller.filterbyAge)
 Router.get('/name/:id', controller.searchByName)
-
 
 module.exports = Router

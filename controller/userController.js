@@ -145,6 +145,17 @@ const userStatus = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
+const userSearch = (async(req,res) => {
+    try {
+        const {q} = req.query
+        if (!q) {
+            return res.status(400).json({message: "Search query is required"})
+        }
+        let searchResult = await services.userSearch(q)
+        return res.status(200).json(searchResult)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
 module.exports = {
     createUser,
     deleteUser,
@@ -162,5 +173,6 @@ module.exports = {
     usersNoPost,
     oldestUsers,
     duplications,
-    userStatus
+    userStatus,
+    userSearch
 }
