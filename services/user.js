@@ -275,10 +275,19 @@ const duplications = (async () => {
     return resultArr
 })
 
+//query = []
 const userSearch = (async(query) =>{
+   const isEmail = query.includes("@")
+
+   if(isEmail) {
+    return await UserDetails.find({email: query})
+      
+   } else {
     return await User.find({
         $text: {$search: query}
     })
+   }
+
 })
 
 module.exports = {

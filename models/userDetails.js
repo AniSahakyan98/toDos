@@ -12,5 +12,7 @@ const userDetails = new Schema({
     }
 },{ timestamps: true })
 
+userDetails.index({email: "text"})
+
 const UserDetails = mongoose.model('UserDetail',userDetails)
 module.exports = UserDetails
