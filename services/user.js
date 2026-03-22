@@ -285,7 +285,7 @@ const userSearch = (async(query) =>{
    } else {
     return await User.find({
         $text: {$search: query}
-    })
+    }).sort({age: -1})
    }
 
 })
