@@ -145,14 +145,37 @@ const userStatus = (async(req,res) => {
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
-const userSearch = (async(req,res) => {
+const userNameSearch = (async(req,res) => {
     try {
+        const {q} = req.query
+        console.log(req.query)
+        if (!q) {
+            return res.status(400).json({message: "Search query is required"})
+        }
+        let searchResult = await services.userNameSearch(q)
+        return res.status(200).json(searchResult)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const emailSearch = (async(req,res) => {
+     try {
         const {q} = req.query
         if (!q) {
             return res.status(400).json({message: "Search query is required"})
         }
-        let searchResult = await services.userSearch(q)
+        let searchResult = await services.emailSearch(q)
         return res.status(200).json(searchResult)
+    } catch(error) {return res.status(500).json({error: error.message})}
+})
+
+const groupBy = (async(req,res) => {
+    try {
+        const {q} = req.query
+        if (!q) {
+            return res.status(400).json({message: "No search query is found"})
+        } 
+        let param = await services.groupBy(q)
+        return res.status(200).json(param)
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 
@@ -174,5 +197,7 @@ module.exports = {
     oldestUsers,
     duplications,
     userStatus,
-    userSearch
+    userNameSearch,
+    emailSearch,
+    groupBy
 }

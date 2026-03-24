@@ -276,19 +276,52 @@ const duplications = (async () => {
 })
 
 //query = []
-const userSearch = (async(query) =>{
-   const isEmail = query.includes("@")
 
-   if(isEmail) {
-    return await UserDetails.find({email: query})
-      
-   } else {
-    return await User.find({
-        $text: {$search: query}
-    }).sort({age: -1})
-   }
+const emailSearch = (async(query) => {
+    console.time("emailTime")
+    const result =  await UserDetails.find({
+        email: query
+    })
+    console.timeEnd("emailTime")
+
+    return result
+})
+
+const userNameSearch = (async(query) =>{
+    console.time("nameSearch");
+
+    //text search
+    // const result = await User.find({
+    //     $text: {$search: query}
+    // })
+
+    const result = await User.find({
+        name: query
+    })
+
+    console.timeEnd("nameSearch")
+    return result
 
 })
+
+
+const groupBy = (async(params) => {
+   
+   
+   return await User.aggregate([
+        {$group: 
+            {_id: `$${params}`,
+            names: {$push: "$name"}
+            }
+        }
+    ])
+           
+
+})
+
+
+//nameSearch: 191.821ms (textsearch),  181.92ms(unique indexing), 173.161msms (unique indexing + internal sorting), 173.517ms (compound)
+//emailTime: 162.154ms(noindexing)
 
 module.exports = {
     createUser,
@@ -308,6 +341,8 @@ module.exports = {
     oldestUsers,
     duplications,
     userStatus,
-    userSearch
+    userNameSearch,
+    emailSearch,
+    groupBy
 }
 

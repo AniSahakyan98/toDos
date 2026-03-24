@@ -28,8 +28,12 @@ const user = new Schema({
 },{ timestamps: true })
 
 
-user.index({name: 1, age: -1})// useful if I search by name and then sort
-user.index({name: "text", gender: "text", age: 1})
+user.index({name: 1},{unique:true})
+
+//user.index({name: 1, age: -1})// useful if I search by name and then sort -// Compound index for filtering + sorting
+
+//user.index({name: "text"})// Text index for full-text search
+
 
 const User = mongoose.model('User',user)
 module.exports = User
