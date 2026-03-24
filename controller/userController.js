@@ -175,7 +175,12 @@ const groupBy = (async(req,res) => {
             return res.status(400).json({message: "No search query is found"})
         } 
         let param = await services.groupBy(q)
-        return res.status(200).json(param)
+        if(param.length !== 0) {
+            return res.status(200).json(param)
+        } else {
+            return res.status(400).json({message: "Field does not exist"})
+        }
+        
     } catch(error) {return res.status(500).json({error: error.message})}
 })
 

@@ -313,7 +313,8 @@ const groupBy = (async(params) => {
             {_id: `$${params}`,
             names: {$push: "$name"}
             }
-        }
+        },
+        {$match: {_id: {$ne: null}}}
     ])
            
 
