@@ -1,33 +1,34 @@
-const {spawn} = require('child_process')
-const pidusage = require('pidusage')
+//child PROCESS-👉 it runs something outside your main app, in parallel.
+// const {spawn} = require('child_process')
+// const pidusage = require('pidusage')
 
+// const child = spawn('node',['worker.js'])
+// console.log('Child PID:',child.pid)
+// //let beat = 1–1.67 beats per second
+// let beat = 0
+// let start = Date.now()
 
-const child = spawn('node',['worker.js'])
-console.log('Child PID:',child.pid)
-//let beat = 1–1.67 beats per second
-let beat = 0
-let start = Date.now()
+// setInterval(() => {
+//   let funcStart = Date.now()
+//   const delay = funcStart - start - 1000
+//   console.log("Delay:",delay)
 
-setInterval(() => {
-  let funcStart = Date.now()
-  const delay = funcStart - start - 1000
-  console.log("Delay:",delay)
-
-  start = funcStart
-  pidusage(child.pid,(err,stats) => { //childi memory u cpu track anenq
+//   start = funcStart
+//   pidusage(child.pid,(err,stats) => { //childi memory u cpu track anenq
   
-    if(err) return console.err(err)
+//     if(err) return console.err(err)
       
-      console.log("heartbeat", beat+=1 )
-      console.log("CPU %",stats.cpu)
-      console.log("memory",stats.memory)
+//       console.log("heartbeat", beat+=1 )
+//       console.log("CPU %",stats.cpu)
+//       console.log("memory",stats.memory)
       
-  })
+//   })
 
-},1000)
+// },1000)
 
 
 
+//MAIN process
 // const pidusage = require("pidusage")
 
 // let beat = 0;
@@ -50,6 +51,5 @@ setInterval(() => {
 //       console.log("cpu %", stats.cpu)
 //       console.log("memory",stats.memory)
 //   })
-  
 
 // },1000)
