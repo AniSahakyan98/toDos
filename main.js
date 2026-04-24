@@ -1,7 +1,6 @@
 //example 1 - worker
 
 const {Worker} = require ("worker_threads")
-
 const worker1 = new Worker('./worker.js')
 const worker2 = new Worker('./worker.js')
 
@@ -32,8 +31,10 @@ worker2.postMessage({start: 5, end: 10})
 
 function checkDone() {
   if(results.length === 2) {
-    const total = results[0] + results[1]
+    const total = results[0].result + results[1].result
     console.log('Final result:', total);
+    console.log("CPU worker 1:", results[0]);
+    console.log("CPU worker 2:", results[1]);
   }
 }
 
