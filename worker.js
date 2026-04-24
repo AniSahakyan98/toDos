@@ -2,19 +2,19 @@ const {parentPort} = require('worker_threads')
 
 
 parentPort.on('message',({start,end}) =>{
-    const startCpu = process.cpuUsage();
+    const t1 = Date.now()
 
     let sum = 0
 
-    for (let i = start *2e8; i < end * 2e8 + 5e8; i++) {
+    for (let i = start; i < end ; i++) {
      sum += Math.sqrt(i) * Math.sin(i) * Math.tan(i);
     }
-    const diff = process.cpuUsage(startCpu);
+
+    const t2 = Date.now()
 
     parentPort.postMessage({
         result: sum,
-        cpuUserMicroseconds: diff.user, // CPU time in JS
-        cpuSystemMicroseconds: diff.system // OS overhead
+        durationMs : t2-t1
 
     })
 })

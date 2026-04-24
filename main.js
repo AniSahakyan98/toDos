@@ -5,6 +5,7 @@ const worker1 = new Worker('./worker.js')
 const worker2 = new Worker('./worker.js')
 
 let results = []
+const tStart = Date.now();
 
 worker1.on('message',(data) => {
   console.log('worker 1 says',data)
@@ -25,16 +26,14 @@ worker2.on('error', (err) => {
   console.log(err)
 })
 
-
-worker1.postMessage({start: 0, end: 5})
-worker2.postMessage({start: 5, end: 10})
+worker1.postMessage({ start: 0, end: 5e7 });
+worker2.postMessage({ start: 5e7, end: 1e8 });
 
 function checkDone() {
   if(results.length === 2) {
     const total = results[0].result + results[1].result
     console.log('Final result:', total);
-    console.log("CPU worker 1:", results[0]);
-    console.log("CPU worker 2:", results[1]);
+    console.log("TOTAL TIME:", Date.now() - tStart, "ms");
   }
 }
 
