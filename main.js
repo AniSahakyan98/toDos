@@ -1,4 +1,48 @@
-//child PROCESS-👉 it runs something outside your main app, in parallel.
+//example 1 - worker
+
+const {Worker} = require ("worker_threads")
+
+const worker1 = new Worker('./worker.js')
+const worker2 = new Worker('./worker.js')
+
+let results = []
+
+worker1.on('message',(data) => {
+  console.log('worker 1 says',data)
+  results.push(data)
+  checkDone()
+})
+
+worker2.on('message',(data) => {
+  console.log('worker 2 says',data)
+  results.push(data)
+  checkDone()
+})
+
+worker1.on('error', (err) => {
+  console.log(err)
+})
+worker2.on('error', (err) => {
+  console.log(err)
+})
+
+
+worker1.postMessage({start: 0, end: 5})
+worker2.postMessage({start: 5, end: 10})
+
+function checkDone() {
+  if(results.length === 2) {
+    const total = results[0] + results[1]
+    console.log('Final result:', total);
+  }
+}
+
+
+
+
+
+
+//example 2 - child PROCESS-👉 it runs something outside your main app, in parallel.
 // const {spawn} = require('child_process')
 // const pidusage = require('pidusage')
 
